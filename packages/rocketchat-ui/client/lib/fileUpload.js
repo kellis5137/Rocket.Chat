@@ -44,10 +44,10 @@ function formatBytes(bytes, decimals) {
 
 	const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-	return `${ parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) } ${ sizes[i] }`;
+	return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
 
-fileUpload = function(filesToUpload) {
+fileUpload = function (filesToUpload) {
 	const roomId = Session.get('openedRoom');
 	const files = [].concat(filesToUpload);
 
@@ -61,7 +61,7 @@ fileUpload = function(filesToUpload) {
 		if (!RocketChat.fileUploadIsValidContentType(file.file.type)) {
 			modal.open({
 				title: t('FileUpload_MediaType_NotAccepted'),
-				text: file.file.type || `*.${ s.strRightBack(file.file.name, '.') }`,
+				text: file.file.type || `*.${s.strRightBack(file.file.name, '.')}`,
 				type: 'error',
 				timer: 3000
 			});
@@ -77,52 +77,52 @@ fileUpload = function(filesToUpload) {
 			return;
 		}
 
-		return getUploadPreview(file, function(file, preview) {
+		return getUploadPreview(file, function (file, preview) {
 			let text = '';
 
 			if (file.type === 'audio') {
 				text = `\
 <div class='upload-preview'>
 	<audio  style="width: 100%;" controls="controls">
-		<source src="${ preview }" type="audio/wav">
+		<source src="${ preview}" type="audio/wav">
 		Your browser does not support the audio element.
 	</audio>
 </div>
 <div class='upload-preview-title'>
 	<div class="rc-input__wrapper">
-		<input class="rc-input__element" id='file-name' style='display: inherit;' value='${ Handlebars._escape(file.name) }' placeholder='${ t('Upload_file_name') }'>
+		<input class="rc-input__element" id='file-name' style='display: inherit;' value='${ Handlebars._escape(file.name)}' placeholder='${t('Upload_file_name')}'>
 	</div>
 	<div class="rc-input__wrapper">
-		<input class="rc-input__element" id='file-description' style='display: inherit;' value='' placeholder='${ t('Upload_file_description') }'>
+		<input class="rc-input__element" id='file-description' style='display: inherit;' value='' placeholder='${ t('Upload_file_description')}'>
 	</div>
 </div>`;
 			} else if (file.type === 'video') {
 				text = `\
 <div class='upload-preview'>
 	<video  style="width: 100%;" controls="controls">
-		<source src="${ preview }" type="video/webm">
+		<source src="${ preview}" type="video/webm">
 		Your browser does not support the video element.
 	</video>
 </div>
 <div class='upload-preview-title'>
 	<div class="rc-input__wrapper">
-		<input class="rc-input__element" id='file-name' style='display: inherit;' value='${ Handlebars._escape(file.name) }' placeholder='${ t('Upload_file_name') }'>
+		<input class="rc-input__element" id='file-name' style='display: inherit;' value='${ Handlebars._escape(file.name)}' placeholder='${t('Upload_file_name')}'>
 	</div>
 	<div class="rc-input__wrapper">
-		<input class="rc-input__element" id='file-description' style='display: inherit;' value='' placeholder='${ t('Upload_file_description') }'>
+		<input class="rc-input__element" id='file-description' style='display: inherit;' value='' placeholder='${ t('Upload_file_description')}'>
 	</div>
 </div>`;
 			} else if (file.type === 'image') {
 				text = `\
 <div class='upload-preview'>
-	<div class='upload-preview-file' style='background-image: url(${ preview })'></div>
+	<div class='upload-preview-file' style='background-image: url(${ preview})'></div>
 </div>
 <div class='upload-preview-title'>
 	<div class="rc-input__wrapper">
-		<input class="rc-input__element" id='file-name' style='display: inherit;' value='${ Handlebars._escape(file.name) }' placeholder='${ t('Upload_file_name') }'>
+		<input class="rc-input__element" id='file-name' style='display: inherit;' value='${ Handlebars._escape(file.name)}' placeholder='${t('Upload_file_name')}'>
 	</div>
 	<div class="rc-input__wrapper">
-		<input class="rc-input__element" id='file-description' style='display: inherit;' value='' placeholder='${ t('Upload_file_description') }'>
+		<input class="rc-input__element" id='file-description' style='display: inherit;' value='' placeholder='${ t('Upload_file_description')}'>
 	</div>
 </div>`;
 			} else {
@@ -130,14 +130,14 @@ fileUpload = function(filesToUpload) {
 
 				text = `\
 <div class='upload-preview'>
-	<div>${ Handlebars._escape(file.name) } - ${ fileSize }</div>
+	<div>${ Handlebars._escape(file.name)} - ${fileSize}</div>
 </div>
 <div class='upload-preview-title'>
 	<div class="rc-input__wrapper">
-		<input class="rc-input__element" id='file-name' style='display: inherit;' value='${ Handlebars._escape(file.name) }' placeholder='${ t('Upload_file_name') }'>
+		<input class="rc-input__element" id='file-name' style='display: inherit;' value='${ Handlebars._escape(file.name)}' placeholder='${t('Upload_file_name')}'>
 	</div>
 	<div class="rc-input__wrapper">
-		<input class="rc-input__element" id='file-description' style='display: inherit;' value='' placeholder='${ t('Upload_file_description') }'>
+		<input class="rc-input__element" id='file-description' style='display: inherit;' value='' placeholder='${ t('Upload_file_description')}'>
 	</div>
 </div>`;
 			}
@@ -152,105 +152,124 @@ fileUpload = function(filesToUpload) {
 				cancelButtonText: t('Cancel'),
 				html: true,
 				onRendered: () => $('#file-name').focus()
-			}, function(isConfirm) {
+			}, function (isConfirm) {
 
-				const record = {
-					name: document.getElementById('file-name').value || file.name || file.file.name,
-					size: file.file.size,
-					type: file.file.type,
-					rid: roomId,
-					description: document.getElementById('file-description').value
-				};
+				
+				var tempFile = file;
+					
+				Resizer.resize(file.file, { width: 1280, height: 720, cropSquare: false }, function (err, file) {
+					var tempImage = file;
+					file = tempFile;
+					file.file = tempImage;
+					//alert(err);
 
-				consume();
-				if (!isConfirm) {
-					return;
-				}
-				const upload = fileUploadHandler('Uploads', record, file.file);
+					//});
 
-				let uploading = Session.get('uploading') || [];
-				uploading.push({
-					id: upload.id,
-					name: upload.getFileName(),
-					percentage: 0
-				});
+					// var tempImage = new Image();
+					// tempImage.src = file;
 
-				Session.set('uploading', uploading);
+					// file = IR.ImageResizer.toBlob(IR.ImageResizer.resize(tempImage, 1280, 720));
 
-				upload.onProgress = function(progress) {
-					uploading = Session.get('uploading');
+					const record = {
+						name: document.getElementById('file-name').value || file.name || file.file.name,
+						size: file.file.size,
+						type: file.file.type,
+						rid: roomId,
+						description: document.getElementById('file-description').value
+					};
 
-					const item = _.findWhere(uploading, {id: upload.id});
-					if (item != null) {
-						item.percentage = Math.round(progress * 100) || 0;
-						return Session.set('uploading', uploading);
-					}
-				};
-
-				upload.start(function(error, file, storage) {
-					if (error) {
-						let uploading = Session.get('uploading');
-						if (!Array.isArray(uploading)) {
-							uploading = [];
-						}
-
-						const item = _.findWhere(uploading, { id: upload.id });
-
-						if (_.isObject(item)) {
-							item.error = error.message;
-							item.percentage = 0;
-						} else {
-							uploading.push({
-								error: error.error,
-								percentage: 0
-							});
-						}
-
-						Session.set('uploading', uploading);
+					consume();
+					if (!isConfirm) {
 						return;
 					}
 
+					const upload = fileUploadHandler('Uploads', record, file.file);
 
-					if (file) {
-						Meteor.call('sendFileMessage', roomId, storage, file, () => {
-							Meteor.setTimeout(() => {
-								const uploading = Session.get('uploading');
-								if (uploading !== null) {
-									const item = _.findWhere(uploading, {
-										id: upload.id
-									});
-									return Session.set('uploading', _.without(uploading, item));
-								}
-							}, 2000);
-						});
-					}
-				});
+					let uploading = Session.get('uploading') || [];
+					uploading.push({
+						id: upload.id,
+						name: upload.getFileName(),
+						percentage: 0
+					});
 
-				Tracker.autorun(function(c) {
-					const cancel = Session.get(`uploading-cancel-${ upload.id }`);
-					if (cancel) {
-						let item;
-						upload.stop();
-						c.stop();
+					Session.set('uploading', uploading);
 
+					upload.onProgress = function (progress) {
 						uploading = Session.get('uploading');
-						if (uploading != null) {
-							item = _.findWhere(uploading, {id: upload.id});
-							if (item != null) {
-								item.percentage = 0;
+
+						const item = _.findWhere(uploading, { id: upload.id });
+						if (item != null) {
+							item.percentage = Math.round(progress * 100) || 0;
+							return Session.set('uploading', uploading);
+						}
+					};
+
+					upload.start(function (error, file, storage) {
+						if (error) {
+							let uploading = Session.get('uploading');
+							if (!Array.isArray(uploading)) {
+								uploading = [];
 							}
+
+							const item = _.findWhere(uploading, { id: upload.id });
+
+							if (_.isObject(item)) {
+								item.error = error.message;
+								item.percentage = 0;
+							} else {
+								uploading.push({
+									error: error.error,
+									percentage: 0
+								});
+							}
+
 							Session.set('uploading', uploading);
+							return;
 						}
 
-						return Meteor.setTimeout(function() {
+
+						if (file) {
+							Meteor.call('sendFileMessage', roomId, storage, file, () => {
+								Meteor.setTimeout(() => {
+									const uploading = Session.get('uploading');
+									if (uploading !== null) {
+										const item = _.findWhere(uploading, {
+											id: upload.id
+										});
+										return Session.set('uploading', _.without(uploading, item));
+									}
+								}, 2000);
+							});
+						}
+					});
+
+					Tracker.autorun(function (c) {
+						const cancel = Session.get(`uploading-cancel-${upload.id}`);
+						if (cancel) {
+							let item;
+							upload.stop();
+							c.stop();
+
 							uploading = Session.get('uploading');
 							if (uploading != null) {
-								item = _.findWhere(uploading, {id: upload.id});
-								return Session.set('uploading', _.without(uploading, item));
+								item = _.findWhere(uploading, { id: upload.id });
+								if (item != null) {
+									item.percentage = 0;
+								}
+								Session.set('uploading', uploading);
 							}
-						}, 1000);
-					}
+
+							return Meteor.setTimeout(function () {
+								uploading = Session.get('uploading');
+								if (uploading != null) {
+									item = _.findWhere(uploading, { id: upload.id });
+									return Session.set('uploading', _.without(uploading, item));
+								}
+							}, 1000);
+						}
+					});
 				});
+
 			});
 		});
 	}

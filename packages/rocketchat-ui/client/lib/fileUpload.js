@@ -154,20 +154,10 @@ fileUpload = function (filesToUpload) {
 				onRendered: () => $('#file-name').focus()
 			}, function (isConfirm) {
 
-				
+
 				var tempFile = file;
-					
-				//Resizer.resize(file.file, { width: 1280, height: 720, cropSquare: false }, 
+
 				const uploadThis = (err, file) => {
-					
-					//alert(err);
-
-					//});
-
-					// var tempImage = new Image();
-					// tempImage.src = file;
-
-					// file = IR.ImageResizer.toBlob(IR.ImageResizer.resize(tempImage, 1280, 720));
 
 					const record = {
 						name: document.getElementById('file-name').value || file.name || file.file.name,
@@ -271,8 +261,8 @@ fileUpload = function (filesToUpload) {
 
 				};
 
-				if(/^image\/.+/.test(file.file.type)){
-					Resizer.resize(file.file, { width: 1280, height: 720, cropSquare: false }, function(err,file) {
+				if (/^image\/.+/.test(file.file.type)) {
+					Resizer.resize(file.file, { width: 1280, height: 720, cropSquare: false }, function (err, file) {
 						var tempImage = file;
 						file = tempFile;
 						file.file = tempImage;

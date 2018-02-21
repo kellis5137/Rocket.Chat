@@ -157,10 +157,9 @@ fileUpload = function (filesToUpload) {
 				
 				var tempFile = file;
 					
-				Resizer.resize(file.file, { width: 1280, height: 720, cropSquare: false }, function (err, file) {
-					var tempImage = file;
-					file = tempFile;
-					file.file = tempImage;
+				//Resizer.resize(file.file, { width: 1280, height: 720, cropSquare: false }, 
+				const uploadThis = (err, file) => {
+					
 					//alert(err);
 
 					//});
@@ -268,7 +267,21 @@ fileUpload = function (filesToUpload) {
 							}, 1000);
 						}
 					});
-				});
+
+
+				};
+
+				if(/^image\/.+/.test(file.file.type)){
+					Resizer.resize(file.file, { width: 1280, height: 720, cropSquare: false }, function(err,file) {
+						var tempImage = file;
+						file = tempFile;
+						file.file = tempImage;
+						uploadThis(err, file);
+					});
+				}
+				else {
+					uploadThis(null, file);
+				}
 
 			});
 		});

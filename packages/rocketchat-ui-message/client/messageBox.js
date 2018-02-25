@@ -1,6 +1,7 @@
 /* globals fileUpload KonchatNotification chatMessages popover isRtl */
 import toastr from 'toastr';
 import moment from 'moment';
+import Picker from 'react-giphy-picker';
 
 function katexSyntax() {
 	if (RocketChat.katex.katex_enabled()) {
@@ -134,9 +135,13 @@ const methods = {
 	actions() {
 		const groups = RocketChat.messageBox.actions.get();
 		return Object.keys(groups).reduce((ret, el) => ret.concat(groups[el]), []);
-	}
+	},
+	picker() {
+		//return alert('asdf');
+		return Picker;
+	  }
 };
-
+Template.messageBox__gif_selector.helpers(methods);
 Template.messageBox__actions.helpers(methods);
 Template.messageBox__actionsSmall.helpers(methods);
 Template.messageBox.helpers({
@@ -426,6 +431,27 @@ Template.messageBox.events({
 	'click .js-md'(e, t) {
 		applyMd.apply(this, [e, t]);
 	},
+	'click .rc-message-box__gif_selector'(e) {
+		const textArea = document.querySelector('.rc-message-box__textarea');
+
+		const config = {
+			popoverClass: 'message-box',
+			template: 'messageBox_giphy_selector',
+			mousePosition: {
+				x: document.querySelector('.rc-message-box__textarea').getBoundingClientRect().right + 10,
+				y: document.querySelector('.rc-message-box__textarea').getBoundingClientRect().top
+			},
+			customCSSProperties: {
+				left: isRtl() ? `${ textArea.getBoundingClientRect().left - 10 }px` : undefined
+			},
+			data: {
+				onSelected: function() {alert(this);}
+			},
+			activeElement: e.currentTarget
+		};
+
+		popover.open(config);
+	},
 	'click .rc-message-box__action-menu'(e) {
 		const groups = RocketChat.messageBox.actions.get();
 		const textArea = document.querySelector('.rc-message-box__textarea');
@@ -483,6 +509,15 @@ Template.messageBox.onRendered(function() {
 Template.messageBox.onCreated(function() {
 	this.isMessageFieldEmpty = new ReactiveVar(true);
 	this.sendIcon = new ReactiveVar(false);
+});
+
+Template.messageBox_giphy_selector.helpers({
+	picker() {
+		return Picker;
+	},
+	theSelected() {
+		alert(this);
+	}
 });
 
 Meteor.startup(function() {

@@ -31,6 +31,7 @@
 							{{> icon block="rc-input__icon-svg" icon="send"}}
 						</div>
 					{{else}}
+						{{> messageBox__gif_selector }}
 						{{> messageBox__actions}}
 					{{/unless}}
 					{{# messageBox__actionsSmall}}
@@ -107,5 +108,15 @@
 				{{> icon block="rc-input__icon-svg" icon="plus"}}
 			</div>
 		{{/if}}
+		</div>
+</template>
+<template name="messageBox__gif_selector">
+	<div class="rc-message-box__gif_selector" data-desktop>
+		<div class="rc-message-box__icon">
+			{{> icon block="rc-input__icon-svg" icon="star"}}
+		</div>
 	</div>
+</template>
+<template name="messageBox_giphy_selector">
+	<div>{{> React component=picker onSelected=theSelected}}</div>
 </template>

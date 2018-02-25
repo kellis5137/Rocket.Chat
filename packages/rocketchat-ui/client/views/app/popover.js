@@ -1,5 +1,6 @@
 /* globals popover isRtl */
 import _ from 'underscore';
+import Picker from 'react-giphy-picker';
 
 import {UiTextContext} from 'meteor/rocketchat:lib';
 
@@ -25,7 +26,11 @@ this.popover = {
 Template.popover.helpers({
 	hasAction() {
 		return !!this.action;
-	}
+	},
+	picker() {
+		//return alert('asdf');
+		return Picker;
+	  }
 });
 
 Template.popover.onRendered(function() {

@@ -22,15 +22,15 @@ function applyMd(e, t) {
 
 	e.preventDefault();
 	const box = t.find('.js-input-message');
-	const {selectionEnd = box.value.length, selectionStart = 0} = box;
+	const { selectionEnd = box.value.length, selectionStart = 0 } = box;
 	const initText = box.value.slice(0, selectionStart);
 	const selectedText = box.value.slice(selectionStart, selectionEnd);
 	const finalText = box.value.slice(selectionEnd, box.value.length);
 
-	const [btn] = t.findAll(`.js-md[aria-label=${ this.label }]`);
+	const [btn] = t.findAll(`.js-md[aria-label=${this.label}]`);
 	if (btn) {
 		btn.classList.add('active');
-		setTimeout(function() {
+		setTimeout(function () {
 			btn.classList.remove('active');
 		}, 100);
 	}
@@ -137,9 +137,8 @@ const methods = {
 		return Object.keys(groups).reduce((ret, el) => ret.concat(groups[el]), []);
 	},
 	picker() {
-		//return alert('asdf');
 		return Picker;
-	  }
+	}
 };
 Template.messageBox__gif_selector.helpers(methods);
 Template.messageBox__actions.helpers(methods);
@@ -149,7 +148,7 @@ Template.messageBox.helpers({
 		return markdownButtons.filter(button => !button.condition || button.condition());
 	},
 	roomName() {
-		const roomData = Session.get(`roomData${ this._id }`);
+		const roomData = Session.get(`roomData${this._id}`);
 		if (!roomData) {
 			return '';
 		}
@@ -157,10 +156,10 @@ Template.messageBox.helpers({
 			const chat = ChatSubscription.findOne({
 				rid: this._id
 			}, {
-				fields: {
-					name: 1
-				}
-			});
+					fields: {
+						name: 1
+					}
+				});
 			return chat && chat.name;
 		} else {
 			return roomData.name;
@@ -173,7 +172,7 @@ Template.messageBox.helpers({
 		return Meteor.userId() && RocketChat.roomTypes.verifyShowJoinLink(this._id);
 	},
 	joinCodeRequired() {
-		const code = Session.get(`roomData${ this._id }`);
+		const code = Session.get(`roomData${this._id}`);
 		return code && code.joinCodeRequired;
 	},
 	subscribed() {
@@ -186,17 +185,17 @@ Template.messageBox.helpers({
 		if (RocketChat.roomTypes.archived(this._id)) {
 			return false;
 		}
-		const roomData = Session.get(`roomData${ this._id }`);
+		const roomData = Session.get(`roomData${this._id}`);
 		if (roomData && roomData.t === 'd') {
 			const subscription = ChatSubscription.findOne({
 				rid: this._id
 			}, {
-				fields: {
-					archived: 1,
-					blocked: 1,
-					blocker: 1
-				}
-			});
+					fields: {
+						archived: 1,
+						blocked: 1,
+						blocker: 1
+					}
+				});
 			if (subscription && (subscription.archived || subscription.blocked || subscription.blocker)) {
 				return false;
 			}
@@ -204,16 +203,16 @@ Template.messageBox.helpers({
 		return true;
 	},
 	isBlockedOrBlocker() {
-		const roomData = Session.get(`roomData${ this._id }`);
+		const roomData = Session.get(`roomData${this._id}`);
 		if (roomData && roomData.t === 'd') {
 			const subscription = ChatSubscription.findOne({
 				rid: this._id
 			}, {
-				fields: {
-					blocked: 1,
-					blocker: 1
-				}
-			});
+					fields: {
+						blocked: 1,
+						blocker: 1
+					}
+				});
 			if (subscription && (subscription.blocked || subscription.blocker)) {
 				return true;
 			}
@@ -249,7 +248,7 @@ Template.messageBox.helpers({
 		return {
 			multi: true,
 			selfTyping: MsgTyping.selfTyping.get(),
-			users: usernames.join(` ${ t('and') } `)
+			users: usernames.join(` ${t('and')} `)
 		};
 	},
 	groupAttachHidden() {
@@ -282,18 +281,18 @@ function firefoxPasteUpload(fn) {
 	if (!user || user[1] > 49) {
 		return fn;
 	}
-	return function(event, instance) {
+	return function (event, instance) {
 		if ((event.originalEvent.ctrlKey || event.originalEvent.metaKey) && (event.keyCode === 86)) {
 			const textarea = instance.find('textarea');
-			const {selectionStart, selectionEnd} = textarea;
+			const { selectionStart, selectionEnd } = textarea;
 			const contentEditableDiv = instance.find('#msg_contenteditable');
 			contentEditableDiv.focus();
-			Meteor.setTimeout(function() {
+			Meteor.setTimeout(function () {
 				const pastedImg = contentEditableDiv.querySelector('img');
 				const textareaContent = textarea.value;
 				const startContent = textareaContent.substring(0, selectionStart);
 				const endContent = textareaContent.substring(selectionEnd);
-				const restoreSelection = function(pastedText) {
+				const restoreSelection = function (pastedText) {
 					textarea.value = startContent + pastedText + endContent;
 					textarea.selectionStart = selectionStart + pastedText.length;
 					return textarea.selectionEnd = textarea.selectionStart;
@@ -303,16 +302,16 @@ function firefoxPasteUpload(fn) {
 				}
 				textarea.focus;
 				if (!pastedImg || contentEditableDiv.innerHTML.length > 0) {
-					return [].slice.call(contentEditableDiv.querySelectorAll('br')).forEach(function(el) {
+					return [].slice.call(contentEditableDiv.querySelectorAll('br')).forEach(function (el) {
 						contentEditableDiv.replaceChild(new Text('\n'), el);
 						return restoreSelection(contentEditableDiv.innerText);
 					});
 				}
 				const imageSrc = pastedImg.getAttribute('src');
 				if (imageSrc.match(/^data:image/)) {
-					return fetch(imageSrc).then(function(img) {
+					return fetch(imageSrc).then(function (img) {
 						return img.blob();
-					}).then(function(blob) {
+					}).then(function (blob) {
 						return fileUpload([
 							{
 								file: blob,
@@ -330,7 +329,7 @@ function firefoxPasteUpload(fn) {
 Template.messageBox.events({
 	'click .js-message-actions .rc-popover__item, click .js-message-actions .js-message-action'(event, instance) {
 		const action = this.action || Template.parentData().action;
-		action.apply(this, [{rid: Template.parentData()._id, messageBox: instance.find('.rc-message-box'), element: event.currentTarget, event}]);
+		action.apply(this, [{ rid: Template.parentData()._id, messageBox: instance.find('.rc-message-box'), element: event.currentTarget, event }]);
 	},
 	'click .join'(event) {
 		event.stopPropagation();
@@ -356,7 +355,7 @@ Template.messageBox.events({
 	'click .register-anonymous'(event) {
 		event.stopPropagation();
 		event.preventDefault();
-		return Meteor.call('registerUser', {}, function(error, loginData) {
+		return Meteor.call('registerUser', {}, function (error, loginData) {
 			if (loginData && loginData.token) {
 				return Meteor.loginWithToken(loginData.token);
 			}
@@ -381,7 +380,7 @@ Template.messageBox.events({
 		return instance.isMessageFieldEmpty.set(chatMessages[this._id].isEmpty());
 	},
 	'paste .js-input-message'(e, instance) {
-		Meteor.setTimeout(function() {
+		Meteor.setTimeout(function () {
 			const input = instance.find('.js-input-message');
 			return typeof input.updateAutogrow === 'function' && input.updateAutogrow();
 		}, 50);
@@ -394,7 +393,7 @@ Template.messageBox.events({
 				e.preventDefault();
 				return {
 					file: item.getAsFile(),
-					name: `Clipboard - ${ moment().format(RocketChat.settings.get('Message_TimeAndDateFormat')) }`
+					name: `Clipboard - ${moment().format(RocketChat.settings.get('Message_TimeAndDateFormat'))}`
 				};
 			}
 		}).filter(e => e);
@@ -404,7 +403,7 @@ Template.messageBox.events({
 			return instance.isMessageFieldEmpty.set(false);
 		}
 	},
-	'keydown .js-input-message': firefoxPasteUpload(function(event, t) {
+	'keydown .js-input-message': firefoxPasteUpload(function (event, t) {
 		if ((navigator.platform.indexOf('Mac') !== -1 && event.metaKey) || (navigator.platform.indexOf('Mac') === -1 && event.ctrlKey)) {
 			const action = markdownButtons.find(action => action.command === event.key.toLowerCase() && (!action.condition || action.condition()));
 			if (action) {
@@ -442,10 +441,12 @@ Template.messageBox.events({
 				y: document.querySelector('.rc-message-box__textarea').getBoundingClientRect().top
 			},
 			customCSSProperties: {
-				left: isRtl() ? `${ textArea.getBoundingClientRect().left - 10 }px` : undefined
+				left: isRtl() ? `${textArea.getBoundingClientRect().left - 10}px` : undefined
 			},
 			data: {
-				onSelected: function() {alert(this);}
+				// theSelected: function() {
+				// 	alert(this);
+				// }
 			},
 			activeElement: e.currentTarget
 		};
@@ -482,7 +483,7 @@ Template.messageBox.events({
 				y: document.querySelector('.rc-message-box__textarea').getBoundingClientRect().top
 			},
 			customCSSProperties: {
-				left: isRtl() ? `${ textArea.getBoundingClientRect().left - 10 }px` : undefined
+				left: isRtl() ? `${textArea.getBoundingClientRect().left - 10}px` : undefined
 			},
 			data: {
 				rid: this._id
@@ -494,7 +495,17 @@ Template.messageBox.events({
 	}
 });
 
-Template.messageBox.onRendered(function() {
+Template.messageBox_giphy_selector.helpers({
+	picker() {
+		return Picker;
+	},
+	theSelected() {
+		return () => {alert("hello");}
+	}
+}
+);
+
+Template.messageBox.onRendered(function () {
 	chatMessages[RocketChat.openedRoom] = chatMessages[RocketChat.openedRoom] || new ChatMessages;
 	chatMessages[RocketChat.openedRoom].input = this.$('.js-input-message').autogrow({
 		animate: true,
@@ -506,23 +517,14 @@ Template.messageBox.onRendered(function() {
 	chatMessages[RocketChat.openedRoom].restoreText(RocketChat.openedRoom);
 });
 
-Template.messageBox.onCreated(function() {
+Template.messageBox.onCreated(function () {
 	this.isMessageFieldEmpty = new ReactiveVar(true);
 	this.sendIcon = new ReactiveVar(false);
 });
 
-Template.messageBox_giphy_selector.helpers({
-	picker() {
-		return Picker;
-	},
-	theSelected() {
-		alert(this);
-	}
-});
-
-Meteor.startup(function() {
+Meteor.startup(function () {
 	RocketChat.Geolocation = new ReactiveVar(false);
-	Tracker.autorun(function() {
+	Tracker.autorun(function () {
 		const MapView_GMapsAPIKey = RocketChat.settings.get('MapView_GMapsAPIKey');
 		if (RocketChat.settings.get('MapView_Enabled') === true && MapView_GMapsAPIKey && MapView_GMapsAPIKey.length && navigator.geolocation && navigator.geolocation.getCurrentPosition) {
 			const success = (position) => {
@@ -542,8 +544,8 @@ Meteor.startup(function() {
 			return RocketChat.Geolocation.set(false);
 		}
 	});
-	RocketChat.callbacks.add('enter-room', function() {
-		setTimeout(()=> {
+	RocketChat.callbacks.add('enter-room', function () {
+		setTimeout(() => {
 			if (chatMessages[RocketChat.openedRoom].input) {
 				chatMessages[RocketChat.openedRoom].input.focus();
 			}

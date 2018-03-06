@@ -10,7 +10,7 @@ RocketChat.messageBox.actions.add('Create_new', 'Video_message', {
 	action({messageBox}) {
 		return VRecDialog.opened ? VRecDialog.close() : VRecDialog.open(messageBox);
 	}
-});
+}); 
 
 RocketChat.messageBox.actions.add('Create_new', 'Audio_message', {
 	id: 'audio-message',
